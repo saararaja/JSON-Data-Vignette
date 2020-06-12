@@ -38,16 +38,27 @@ Further information on JSON data can be found [here](https://www.infoworld.com/a
 Since JSON data is purely text-based, it needs to be parsed in order to use in databases or in programming platforms.  To read and parse JSON data into R, there are 4 main packages: `rjson`, `rjsonio`, `jsonlite`, and `tidyjson`.
 
 ### rjson and rjsonio
-Both `rjson` and `rjsonio` have the same functionality and same basic interface.  `rjson` was the first package created for translating between R and json, and `rjsonio` was created subsequently to perform the same task more quickly, though now both packages have comparable efficiency.
+Both `rjson` and `rjsonio` have the same functionality and same basic interface.  `rjson` was the first package created for translating between R and JSON, and `rjsonio` was created subsequently to perform the same task more quickly, though now both packages have comparable efficiency.
 
-Both packages have two basic functions: `fromJSON("file.json")` for converting json files into R objects and `toJSON(x)` to convert an R object x into a json file.
+Both packages have two basic functions: `fromJSON("file.json")` for converting JSON files into R objects and `toJSON(x)` to convert an R object x into a JSON file.  The default R object created when reading in JSON data is a list with sublists for any nested information.
+
+Additional information for how to work with `rjson` and `rjsonio` can be found here: [rjson tutorial](https://www.tutorialspoint.com/r/r_json_files.htm) and [rjsonio tutorial](http://zevross.com/blog/2015/02/12/using-r-to-download-and-parse-json-an-example-using-data-from-an-open-data-portal/)
 
 ### jsonlite
+Reading and analyzing data in nested lists can be complicated.  Therefore, the `jsonlite` package, reads and parses JSON data into R directly as dataframes.  The same function, `fromJSON("file.json")` is used to accomplish this.  
+
+Nested data from the JSON file is displayed by default as dataframes within the main data frame.  In order to convert the result into a single data frame, the `flatten()` function can be used on the object.  This causes any nested dataframes to be converted to a single column as much as possible.  This flattening is not perfect, and additional data manipulation may be necessary to create a final dataset in the desired manner.
+
+Additional information for how to work with `jsonlite` can be found here: [jsonlite tutorial](https://blog.exploratory.io/working-with-json-data-in-very-simple-way-ad7ebcc0bb89)
 
 ### tidyjson
+The `tidyjson` package is the last major method of reading JSON data into R.  Like `jsonlite`, it also directly parses JSON data into dataframes, but it also has very simple functions for tackling nested data frames, and enables the object to be used directly with functions from the `tidyverse` along with `$>%`piping.
 
+Using `tidyjson`, we can create a dataframe of the data directly at the nesting level that we are interested in examining. Using the functions `jsondata %>% enter_object(object_name) %>% gather_array %>% spread_all`: `tidyjson` dives into the nested object "object_name" within the JSON data, gathers the array values and then spreads them into individual variables in the final data frame.
 
+Because of the ease of manipulating JSON data into data frames that can be used along with the `tidyverse` functions, I have chosen this method to conduct the further analyses in this vignette.
 
+Additional information for how to work with `tidyjson` can be found here: [tidyjson tutorial](https://rdrr.io/cran/tidyjson/f/vignettes/introduction-to-tidyjson.Rmd)
 
 ## Example Analysis using JSON Data
 
