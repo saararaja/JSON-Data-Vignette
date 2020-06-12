@@ -1,14 +1,27 @@
 JSON Data - A Vignette by Saara Raja
 ================
 
--   [JSON Data](#json-data)
+-   [JSON Data Overview](#json-data-overview)
+    -   [Data Structure](#data-structure)
 -   [Reading JSON Data into R](#reading-json-data-into-r)
 -   [Connect to NHL Data](#connect-to-nhl-data)
 
-JSON Data
----------
+JSON Data Overview
+------------------
 
-Text to Go Here
+**JSON**, or Java Script Object Notation, Data is a purely text-based way of storing data and is the primary way of data storage/retrieval of web information. Because of its simplistic text format, JSON data is easy to read and understand by humans, while also enabling easy data parsing by a computer, hence its popularity. XML, an alternative text-based data interchange method, has a much more complex/verbose syntax and is more challenging for humans to code and understand, causing JSON to eclipse it as the most popular method of exchanging web information. JSON is the most popular method of extracting data from REST APIs, so having a good understanding of the format is valuable for any analytics on web-based data.
+
+### Data Structure
+
+The JSON data structure is in the form of nested key-value pairs and ordered lists. The following image shows the general format of JSON data. The original image along with more information can be found [here](https://www.goanywhere.com/managed-file-transfer/more/tutorials/parse-json-data-into-database).
+
+<img src="ExampleJSON2.png" width="60%" />
+
+As we can see from the image, JSON objects are created within `{}` curly brackets and each variable is paired with its value is `"key":"value"` format. All values are placed within double quotes, whether they are of character or numeric type. Data can also have multiple values that is depicted using `[]` square brackets to show arrays. Arrays are an ordered list of key-value pairs, separated by commas.
+
+In this particular image, there is a JSON object called "orders" which has several attributes ("orderno", "date", "trackingno", etc) that are displayed as nested key-value pairs in an array . This nested format shows that each of these variables is related to the original parent variable "orders". In addition, the variable "customer" has further attributes of its own, which are displayed in a 3rd layer nested key-value pairs in an array.
+
+Further information on JSON data can be found [here](https://www.infoworld.com/article/3222851/what-is-json-a-better-format-for-data-exchange.html).
 
 Reading JSON Data into R
 ------------------------
