@@ -26,7 +26,7 @@ library(tidyjson)
 ```
 
 
-```{r Read_In_functions}
+```{r Read_In_1}
 
 base <- "https://records.nhl.com/site/api"
 
@@ -37,15 +37,14 @@ franch_func <- function(){
   
   #Create the url & read in the data 
   call1 <- paste0(base, endpoint)
-  get_franchise <- GET(call1)
-  get_franchise_text <- content(get_franchise, "text")
+  get_json <- GET(call1)
+  get_json_text <- content(get_json, "text")
   
   #use tidyjson to convert the data into a useable dataframe
-  franchise_prelim <- get_franchise_text %>% enter_object(data) %>%
-                      gather_array %>% spread_all
-  franchise <- as_tibble(franchise_prelim) 
-  franchise <- franchise %>% select(id, firstSeasonId, lastSeasonId, teamCommonName)
-  return(franchise)
+  df_prelim <- get_json_text %>% enter_object(data) %>% gather_array %>% spread_all
+  df <- as_tibble(df_prelim) 
+  df <- df %>% select(-document.id, -array.index)
+  return(df)
 }
 ```
 
@@ -54,3 +53,103 @@ franchise <- franch_func()
 franchise
 ```
 
+
+```{r Read_in_2}
+
+franch_total_func <- function(){
+  
+  #url ending
+  endpoint <- "/franchise-team-totals"
+  
+  #Create the url & read in the data 
+  call1 <- paste0(base, endpoint)
+  get_json <- GET(call1)
+  get_json_text <- content(get_json, "text")
+  
+  #use tidyjson to convert the data into a useable dataframe
+  df_prelim <- get_json_text %>% enter_object(data) %>% gather_array %>% spread_all
+  df <- as_tibble(df_prelim) 
+  df <- df %>% select(-document.id, -array.index)
+  return(df)
+}
+```
+
+```{r Call_total}
+franch_total <- franch_total_func()
+franch_total
+```
+
+
+```{r Read_in_3}
+
+franch_season_func <- function(number){
+  
+  #url ending
+  endpoint <- "/franchise-season-records?cayenneExp=franchiseId="
+  
+  #Create the url & read in the data 
+  call1 <- paste0(base, endpoint, number)
+  get_json <- GET(call1)
+  get_json_text <- content(get_json, "text")
+  
+  #use tidyjson to convert the data into a useable dataframe
+  df_prelim <- get_json_text %>% enter_object(data) %>% gather_array %>% spread_all
+  df <- as_tibble(df_prelim) 
+  df <- df %>% select(-document.id, -array.index)
+  return(df)
+}
+```
+
+```{r Call_3}
+franch_season <- franch_season_func(3)
+franch_season
+```
+
+```{r Read_in_4}
+
+franch_goalie_func <- function(number){
+  
+  #url ending
+  endpoint <- "/franchise-goalie-records?cayenneExp=franchiseId="
+  
+  #Create the url & read in the data 
+  call1 <- paste0(base, endpoint, number)
+  get_json <- GET(call1)
+  get_json_text <- content(get_json, "text")
+  
+  #use tidyjson to convert the data into a useable dataframe
+  df_prelim <- get_json_text %>% enter_object(data) %>% gather_array %>% spread_all
+  df <- as_tibble(df_prelim) 
+  df <- df %>% select(-document.id, -array.index)
+  return(df)
+}
+```
+```{r Call_4}
+franch_goalie <- franch_goalie_func(3)
+franch_goalie
+```
+
+```{r Read_in_5}
+
+franch_skater_func <- function(number){
+  
+  #url ending
+  endpoint <- "/franchise-skater-records?cayenneExp=franchiseId="
+  
+  #Create the url & read in the data 
+  call1 <- paste0(base, endpoint, number)
+  get_json <- GET(call1)
+  get_json_text <- content(get_json, "text")
+  
+  #use tidyjson to convert the data into a useable dataframe
+  df_prelim <- get_json_text %>% enter_object(data) %>% gather_array %>% spread_all
+  df <- as_tibble(df_prelim) 
+  df <- df %>% select(-document.id, -array.index)
+  return(df)
+}
+```
+
+```{r Call_5}
+franch_skater <- franch_skater_func(3)
+franch_skater
+```
