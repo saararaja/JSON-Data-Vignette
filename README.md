@@ -4,7 +4,11 @@ JSON Data - A Vignette by Saara Raja
 -   [JSON Data Overview](#json-data-overview)
     -   [Data Structure](#data-structure)
 -   [Reading JSON Data into R](#reading-json-data-into-r)
--   [Connect to NHL Data](#connect-to-nhl-data)
+    -   [rjson and rjsonio](#rjson-and-rjsonio)
+    -   [jsonlite](#jsonlite)
+    -   [tidyjson](#tidyjson)
+-   [Example Analysis using JSON Data](#example-analysis-using-json-data)
+    -   [Connect to NHL Data](#connect-to-nhl-data)
 
 JSON Data Overview
 ------------------
@@ -26,10 +30,22 @@ Further information on JSON data can be found [here](https://www.infoworld.com/a
 Reading JSON Data into R
 ------------------------
 
-Text to Go Here
+Since JSON data is purely text-based, it needs to be parsed in order to use in databases or in programming platforms. To read and parse JSON data into R, there are 4 main packages: `rjson`, `rjsonio`, `jsonlite`, and `tidyjson`.
 
-Connect to NHL Data
--------------------
+### rjson and rjsonio
+
+Both `rjson` and `rjsonio` have the same functionality and same basic interface. `rjson` was the first package created for translating between R and json, and `rjsonio` was created subsequently to perform the same task more quickly, though now both packages have comparable efficiency.
+
+Both packages have two basic functions: `fromJSON("file.json")` for converting json files into R objects and `toJSON(x)` to convert an R object x into a json file.
+
+### jsonlite
+
+### tidyjson
+
+Example Analysis using JSON Data
+--------------------------------
+
+### Connect to NHL Data
 
 ``` r
 base <- "https://records.nhl.com/site/api"
