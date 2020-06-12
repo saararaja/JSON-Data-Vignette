@@ -1,17 +1,34 @@
 ---
-title: "ST558 Project 1 - by Saara Raja"
-output: github_document
+title: "JSON Data - A Vignette by Saara Raja"
+output: 
+  github_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
-## Testing Git capabilities
-Will this save to github from R studio? Let's see....
+## JSON Data
+Text to Go Here
 
-```{r Testing_some_random_code}
-library(dplyr)
-iris
+## Reading JSON Data into R
+Text to Go Here
+
+## Connect to NHL Data
+
+```{r Read_In}
+library(httr)
+library(jsonlite)
+
+base <- "https://records.nhl.com/site/api"
+endpoint <- "/franchise"
+call1 <- paste0(base, endpoint)
+
+get_franchise <- GET(call1)
+get_franchise_text <- content(get_franchise, "text")
+
+get_franchise_text
 ```
+
 

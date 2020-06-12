@@ -1,178 +1,35 @@
-ST558 Project 1 - by Saara Raja
+JSON Data - A Vignette by Saara Raja
 ================
 
-Testing Git capabilities
+-   [JSON Data](#json-data)
+-   [Reading JSON Data into R](#reading-json-data-into-r)
+-   [Connect to NHL Data](#connect-to-nhl-data)
+
+JSON Data
+---------
+
+Text to Go Here
+
+Reading JSON Data into R
 ------------------------
 
-Will this save to github from R studio? Let's see....
+Text to Go Here
+
+Connect to NHL Data
+-------------------
 
 ``` r
-library(dplyr)
+library(httr)
+library(jsonlite)
+
+base <- "https://records.nhl.com/site/api"
+endpoint <- "/franchise"
+call1 <- paste0(base, endpoint)
+
+get_franchise <- GET(call1)
+get_franchise_text <- content(get_franchise, "text")
+
+get_franchise_text
 ```
 
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
-iris
-```
-
-    ##     Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-    ## 1            5.1         3.5          1.4         0.2     setosa
-    ## 2            4.9         3.0          1.4         0.2     setosa
-    ## 3            4.7         3.2          1.3         0.2     setosa
-    ## 4            4.6         3.1          1.5         0.2     setosa
-    ## 5            5.0         3.6          1.4         0.2     setosa
-    ## 6            5.4         3.9          1.7         0.4     setosa
-    ## 7            4.6         3.4          1.4         0.3     setosa
-    ## 8            5.0         3.4          1.5         0.2     setosa
-    ## 9            4.4         2.9          1.4         0.2     setosa
-    ## 10           4.9         3.1          1.5         0.1     setosa
-    ## 11           5.4         3.7          1.5         0.2     setosa
-    ## 12           4.8         3.4          1.6         0.2     setosa
-    ## 13           4.8         3.0          1.4         0.1     setosa
-    ## 14           4.3         3.0          1.1         0.1     setosa
-    ## 15           5.8         4.0          1.2         0.2     setosa
-    ## 16           5.7         4.4          1.5         0.4     setosa
-    ## 17           5.4         3.9          1.3         0.4     setosa
-    ## 18           5.1         3.5          1.4         0.3     setosa
-    ## 19           5.7         3.8          1.7         0.3     setosa
-    ## 20           5.1         3.8          1.5         0.3     setosa
-    ## 21           5.4         3.4          1.7         0.2     setosa
-    ## 22           5.1         3.7          1.5         0.4     setosa
-    ## 23           4.6         3.6          1.0         0.2     setosa
-    ## 24           5.1         3.3          1.7         0.5     setosa
-    ## 25           4.8         3.4          1.9         0.2     setosa
-    ## 26           5.0         3.0          1.6         0.2     setosa
-    ## 27           5.0         3.4          1.6         0.4     setosa
-    ## 28           5.2         3.5          1.5         0.2     setosa
-    ## 29           5.2         3.4          1.4         0.2     setosa
-    ## 30           4.7         3.2          1.6         0.2     setosa
-    ## 31           4.8         3.1          1.6         0.2     setosa
-    ## 32           5.4         3.4          1.5         0.4     setosa
-    ## 33           5.2         4.1          1.5         0.1     setosa
-    ## 34           5.5         4.2          1.4         0.2     setosa
-    ## 35           4.9         3.1          1.5         0.2     setosa
-    ## 36           5.0         3.2          1.2         0.2     setosa
-    ## 37           5.5         3.5          1.3         0.2     setosa
-    ## 38           4.9         3.6          1.4         0.1     setosa
-    ## 39           4.4         3.0          1.3         0.2     setosa
-    ## 40           5.1         3.4          1.5         0.2     setosa
-    ## 41           5.0         3.5          1.3         0.3     setosa
-    ## 42           4.5         2.3          1.3         0.3     setosa
-    ## 43           4.4         3.2          1.3         0.2     setosa
-    ## 44           5.0         3.5          1.6         0.6     setosa
-    ## 45           5.1         3.8          1.9         0.4     setosa
-    ## 46           4.8         3.0          1.4         0.3     setosa
-    ## 47           5.1         3.8          1.6         0.2     setosa
-    ## 48           4.6         3.2          1.4         0.2     setosa
-    ## 49           5.3         3.7          1.5         0.2     setosa
-    ## 50           5.0         3.3          1.4         0.2     setosa
-    ## 51           7.0         3.2          4.7         1.4 versicolor
-    ## 52           6.4         3.2          4.5         1.5 versicolor
-    ## 53           6.9         3.1          4.9         1.5 versicolor
-    ## 54           5.5         2.3          4.0         1.3 versicolor
-    ## 55           6.5         2.8          4.6         1.5 versicolor
-    ## 56           5.7         2.8          4.5         1.3 versicolor
-    ## 57           6.3         3.3          4.7         1.6 versicolor
-    ## 58           4.9         2.4          3.3         1.0 versicolor
-    ## 59           6.6         2.9          4.6         1.3 versicolor
-    ## 60           5.2         2.7          3.9         1.4 versicolor
-    ## 61           5.0         2.0          3.5         1.0 versicolor
-    ## 62           5.9         3.0          4.2         1.5 versicolor
-    ## 63           6.0         2.2          4.0         1.0 versicolor
-    ## 64           6.1         2.9          4.7         1.4 versicolor
-    ## 65           5.6         2.9          3.6         1.3 versicolor
-    ## 66           6.7         3.1          4.4         1.4 versicolor
-    ## 67           5.6         3.0          4.5         1.5 versicolor
-    ## 68           5.8         2.7          4.1         1.0 versicolor
-    ## 69           6.2         2.2          4.5         1.5 versicolor
-    ## 70           5.6         2.5          3.9         1.1 versicolor
-    ## 71           5.9         3.2          4.8         1.8 versicolor
-    ## 72           6.1         2.8          4.0         1.3 versicolor
-    ## 73           6.3         2.5          4.9         1.5 versicolor
-    ## 74           6.1         2.8          4.7         1.2 versicolor
-    ## 75           6.4         2.9          4.3         1.3 versicolor
-    ## 76           6.6         3.0          4.4         1.4 versicolor
-    ## 77           6.8         2.8          4.8         1.4 versicolor
-    ## 78           6.7         3.0          5.0         1.7 versicolor
-    ## 79           6.0         2.9          4.5         1.5 versicolor
-    ## 80           5.7         2.6          3.5         1.0 versicolor
-    ## 81           5.5         2.4          3.8         1.1 versicolor
-    ## 82           5.5         2.4          3.7         1.0 versicolor
-    ## 83           5.8         2.7          3.9         1.2 versicolor
-    ## 84           6.0         2.7          5.1         1.6 versicolor
-    ## 85           5.4         3.0          4.5         1.5 versicolor
-    ## 86           6.0         3.4          4.5         1.6 versicolor
-    ## 87           6.7         3.1          4.7         1.5 versicolor
-    ## 88           6.3         2.3          4.4         1.3 versicolor
-    ## 89           5.6         3.0          4.1         1.3 versicolor
-    ## 90           5.5         2.5          4.0         1.3 versicolor
-    ## 91           5.5         2.6          4.4         1.2 versicolor
-    ## 92           6.1         3.0          4.6         1.4 versicolor
-    ## 93           5.8         2.6          4.0         1.2 versicolor
-    ## 94           5.0         2.3          3.3         1.0 versicolor
-    ## 95           5.6         2.7          4.2         1.3 versicolor
-    ## 96           5.7         3.0          4.2         1.2 versicolor
-    ## 97           5.7         2.9          4.2         1.3 versicolor
-    ## 98           6.2         2.9          4.3         1.3 versicolor
-    ## 99           5.1         2.5          3.0         1.1 versicolor
-    ## 100          5.7         2.8          4.1         1.3 versicolor
-    ## 101          6.3         3.3          6.0         2.5  virginica
-    ## 102          5.8         2.7          5.1         1.9  virginica
-    ## 103          7.1         3.0          5.9         2.1  virginica
-    ## 104          6.3         2.9          5.6         1.8  virginica
-    ## 105          6.5         3.0          5.8         2.2  virginica
-    ## 106          7.6         3.0          6.6         2.1  virginica
-    ## 107          4.9         2.5          4.5         1.7  virginica
-    ## 108          7.3         2.9          6.3         1.8  virginica
-    ## 109          6.7         2.5          5.8         1.8  virginica
-    ## 110          7.2         3.6          6.1         2.5  virginica
-    ## 111          6.5         3.2          5.1         2.0  virginica
-    ## 112          6.4         2.7          5.3         1.9  virginica
-    ## 113          6.8         3.0          5.5         2.1  virginica
-    ## 114          5.7         2.5          5.0         2.0  virginica
-    ## 115          5.8         2.8          5.1         2.4  virginica
-    ## 116          6.4         3.2          5.3         2.3  virginica
-    ## 117          6.5         3.0          5.5         1.8  virginica
-    ## 118          7.7         3.8          6.7         2.2  virginica
-    ## 119          7.7         2.6          6.9         2.3  virginica
-    ## 120          6.0         2.2          5.0         1.5  virginica
-    ## 121          6.9         3.2          5.7         2.3  virginica
-    ## 122          5.6         2.8          4.9         2.0  virginica
-    ## 123          7.7         2.8          6.7         2.0  virginica
-    ## 124          6.3         2.7          4.9         1.8  virginica
-    ## 125          6.7         3.3          5.7         2.1  virginica
-    ## 126          7.2         3.2          6.0         1.8  virginica
-    ## 127          6.2         2.8          4.8         1.8  virginica
-    ## 128          6.1         3.0          4.9         1.8  virginica
-    ## 129          6.4         2.8          5.6         2.1  virginica
-    ## 130          7.2         3.0          5.8         1.6  virginica
-    ## 131          7.4         2.8          6.1         1.9  virginica
-    ## 132          7.9         3.8          6.4         2.0  virginica
-    ## 133          6.4         2.8          5.6         2.2  virginica
-    ## 134          6.3         2.8          5.1         1.5  virginica
-    ## 135          6.1         2.6          5.6         1.4  virginica
-    ## 136          7.7         3.0          6.1         2.3  virginica
-    ## 137          6.3         3.4          5.6         2.4  virginica
-    ## 138          6.4         3.1          5.5         1.8  virginica
-    ## 139          6.0         3.0          4.8         1.8  virginica
-    ## 140          6.9         3.1          5.4         2.1  virginica
-    ## 141          6.7         3.1          5.6         2.4  virginica
-    ## 142          6.9         3.1          5.1         2.3  virginica
-    ## 143          5.8         2.7          5.1         1.9  virginica
-    ## 144          6.8         3.2          5.9         2.3  virginica
-    ## 145          6.7         3.3          5.7         2.5  virginica
-    ## 146          6.7         3.0          5.2         2.3  virginica
-    ## 147          6.3         2.5          5.0         1.9  virginica
-    ## 148          6.5         3.0          5.2         2.0  virginica
-    ## 149          6.2         3.4          5.4         2.3  virginica
-    ## 150          5.9         3.0          5.1         1.8  virginica
+    ## [1] "{\"data\":[{\"id\":1,\"firstSeasonId\":19171918,\"lastSeasonId\":null,\"mostRecentTeamId\":8,\"teamCommonName\":\"Canadiens\",\"teamPlaceName\":\"Montréal\"},{\"id\":2,\"firstSeasonId\":19171918,\"lastSeasonId\":19171918,\"mostRecentTeamId\":41,\"teamCommonName\":\"Wanderers\",\"teamPlaceName\":\"Montreal\"},{\"id\":3,\"firstSeasonId\":19171918,\"lastSeasonId\":19341935,\"mostRecentTeamId\":45,\"teamCommonName\":\"Eagles\",\"teamPlaceName\":\"St. Louis\"},{\"id\":4,\"firstSeasonId\":19191920,\"lastSeasonId\":19241925,\"mostRecentTeamId\":37,\"teamCommonName\":\"Tigers\",\"teamPlaceName\":\"Hamilton\"},{\"id\":5,\"firstSeasonId\":19171918,\"lastSeasonId\":null,\"mostRecentTeamId\":10,\"teamCommonName\":\"Maple Leafs\",\"teamPlaceName\":\"Toronto\"},{\"id\":6,\"firstSeasonId\":19241925,\"lastSeasonId\":null,\"mostRecentTeamId\":6,\"teamCommonName\":\"Bruins\",\"teamPlaceName\":\"Boston\"},{\"id\":7,\"firstSeasonId\":19241925,\"lastSeasonId\":19371938,\"mostRecentTeamId\":43,\"teamCommonName\":\"Maroons\",\"teamPlaceName\":\"Montreal\"},{\"id\":8,\"firstSeasonId\":19251926,\"lastSeasonId\":19411942,\"mostRecentTeamId\":51,\"teamCommonName\":\"Americans\",\"teamPlaceName\":\"Brooklyn\"},{\"id\":9,\"firstSeasonId\":19251926,\"lastSeasonId\":19301931,\"mostRecentTeamId\":39,\"teamCommonName\":\"Quakers\",\"teamPlaceName\":\"Philadelphia\"},{\"id\":10,\"firstSeasonId\":19261927,\"lastSeasonId\":null,\"mostRecentTeamId\":3,\"teamCommonName\":\"Rangers\",\"teamPlaceName\":\"New York\"},{\"id\":11,\"firstSeasonId\":19261927,\"lastSeasonId\":null,\"mostRecentTeamId\":16,\"teamCommonName\":\"Blackhawks\",\"teamPlaceName\":\"Chicago\"},{\"id\":12,\"firstSeasonId\":19261927,\"lastSeasonId\":null,\"mostRecentTeamId\":17,\"teamCommonName\":\"Red Wings\",\"teamPlaceName\":\"Detroit\"},{\"id\":13,\"firstSeasonId\":19671968,\"lastSeasonId\":19771978,\"mostRecentTeamId\":49,\"teamCommonName\":\"Barons\",\"teamPlaceName\":\"Cleveland\"},{\"id\":14,\"firstSeasonId\":19671968,\"lastSeasonId\":null,\"mostRecentTeamId\":26,\"teamCommonName\":\"Kings\",\"teamPlaceName\":\"Los Angeles\"},{\"id\":15,\"firstSeasonId\":19671968,\"lastSeasonId\":null,\"mostRecentTeamId\":25,\"teamCommonName\":\"Stars\",\"teamPlaceName\":\"Dallas\"},{\"id\":16,\"firstSeasonId\":19671968,\"lastSeasonId\":null,\"mostRecentTeamId\":4,\"teamCommonName\":\"Flyers\",\"teamPlaceName\":\"Philadelphia\"},{\"id\":17,\"firstSeasonId\":19671968,\"lastSeasonId\":null,\"mostRecentTeamId\":5,\"teamCommonName\":\"Penguins\",\"teamPlaceName\":\"Pittsburgh\"},{\"id\":18,\"firstSeasonId\":19671968,\"lastSeasonId\":null,\"mostRecentTeamId\":19,\"teamCommonName\":\"Blues\",\"teamPlaceName\":\"St. Louis\"},{\"id\":19,\"firstSeasonId\":19701971,\"lastSeasonId\":null,\"mostRecentTeamId\":7,\"teamCommonName\":\"Sabres\",\"teamPlaceName\":\"Buffalo\"},{\"id\":20,\"firstSeasonId\":19701971,\"lastSeasonId\":null,\"mostRecentTeamId\":23,\"teamCommonName\":\"Canucks\",\"teamPlaceName\":\"Vancouver\"},{\"id\":21,\"firstSeasonId\":19721973,\"lastSeasonId\":null,\"mostRecentTeamId\":20,\"teamCommonName\":\"Flames\",\"teamPlaceName\":\"Calgary\"},{\"id\":22,\"firstSeasonId\":19721973,\"lastSeasonId\":null,\"mostRecentTeamId\":2,\"teamCommonName\":\"Islanders\",\"teamPlaceName\":\"New York\"},{\"id\":23,\"firstSeasonId\":19741975,\"lastSeasonId\":null,\"mostRecentTeamId\":1,\"teamCommonName\":\"Devils\",\"teamPlaceName\":\"New Jersey\"},{\"id\":24,\"firstSeasonId\":19741975,\"lastSeasonId\":null,\"mostRecentTeamId\":15,\"teamCommonName\":\"Capitals\",\"teamPlaceName\":\"Washington\"},{\"id\":25,\"firstSeasonId\":19791980,\"lastSeasonId\":null,\"mostRecentTeamId\":22,\"teamCommonName\":\"Oilers\",\"teamPlaceName\":\"Edmonton\"},{\"id\":26,\"firstSeasonId\":19791980,\"lastSeasonId\":null,\"mostRecentTeamId\":12,\"teamCommonName\":\"Hurricanes\",\"teamPlaceName\":\"Carolina\"},{\"id\":27,\"firstSeasonId\":19791980,\"lastSeasonId\":null,\"mostRecentTeamId\":21,\"teamCommonName\":\"Avalanche\",\"teamPlaceName\":\"Colorado\"},{\"id\":28,\"firstSeasonId\":19791980,\"lastSeasonId\":null,\"mostRecentTeamId\":53,\"teamCommonName\":\"Coyotes\",\"teamPlaceName\":\"Arizona\"},{\"id\":29,\"firstSeasonId\":19911992,\"lastSeasonId\":null,\"mostRecentTeamId\":28,\"teamCommonName\":\"Sharks\",\"teamPlaceName\":\"San Jose\"},{\"id\":30,\"firstSeasonId\":19921993,\"lastSeasonId\":null,\"mostRecentTeamId\":9,\"teamCommonName\":\"Senators\",\"teamPlaceName\":\"Ottawa\"},{\"id\":31,\"firstSeasonId\":19921993,\"lastSeasonId\":null,\"mostRecentTeamId\":14,\"teamCommonName\":\"Lightning\",\"teamPlaceName\":\"Tampa Bay\"},{\"id\":32,\"firstSeasonId\":19931994,\"lastSeasonId\":null,\"mostRecentTeamId\":24,\"teamCommonName\":\"Ducks\",\"teamPlaceName\":\"Anaheim\"},{\"id\":33,\"firstSeasonId\":19931994,\"lastSeasonId\":null,\"mostRecentTeamId\":13,\"teamCommonName\":\"Panthers\",\"teamPlaceName\":\"Florida\"},{\"id\":34,\"firstSeasonId\":19981999,\"lastSeasonId\":null,\"mostRecentTeamId\":18,\"teamCommonName\":\"Predators\",\"teamPlaceName\":\"Nashville\"},{\"id\":35,\"firstSeasonId\":19992000,\"lastSeasonId\":null,\"mostRecentTeamId\":52,\"teamCommonName\":\"Jets\",\"teamPlaceName\":\"Winnipeg\"},{\"id\":36,\"firstSeasonId\":20002001,\"lastSeasonId\":null,\"mostRecentTeamId\":29,\"teamCommonName\":\"Blue Jackets\",\"teamPlaceName\":\"Columbus\"},{\"id\":37,\"firstSeasonId\":20002001,\"lastSeasonId\":null,\"mostRecentTeamId\":30,\"teamCommonName\":\"Wild\",\"teamPlaceName\":\"Minnesota\"},{\"id\":38,\"firstSeasonId\":20172018,\"lastSeasonId\":null,\"mostRecentTeamId\":54,\"teamCommonName\":\"Golden Knights\",\"teamPlaceName\":\"Vegas\"}],\"total\":38}"
