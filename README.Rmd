@@ -20,6 +20,8 @@ Text to Go Here
 ```{r Read_In}
 library(httr)
 library(jsonlite)
+library(tidyverse)
+library(tidyjson)
 
 base <- "https://records.nhl.com/site/api"
 endpoint <- "/franchise"
@@ -28,7 +30,34 @@ call1 <- paste0(base, endpoint)
 get_franchise <- GET(call1)
 get_franchise_text <- content(get_franchise, "text")
 
-get_franchise_text
+get_franchise_text %>% gather_object %>% json_types %>% count(name, type)
+
+franchise_prelim <- get_franchise_text %>%
+  enter_object(data) %>%
+  gather_array %>%
+  spread_all
+
+franchise <- as.tibble(franchise_prelim) 
+
+
+ franchise %>% select(id, firstSeasonId, lastSeasonId, teamCommonName)
+
+
+
+
+
+
+
+#get_franchise_json <- fromJSON(get_franchise_text, flatten = TRUE, simplifyDataFrame = TRUE)
+#get_franchise_df <- as_tibble(get_franchise_json)
+
+#names(get_franchise_df)
+#get_franchise_df
+#franchise <- get_franchise_df %>% select("$id", "$firstSeasonId", "$lastSeasonId", "$teamCommonName")
+
+#print(franchise)
+
+
 ```
 
 
