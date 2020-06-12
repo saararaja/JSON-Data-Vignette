@@ -19,44 +19,32 @@ Connect to NHL Data
 -------------------
 
 ``` r
-library(httr)
-library(jsonlite)
-library(tidyverse)
-library(tidyjson)
-
 base <- "https://records.nhl.com/site/api"
-endpoint <- "/franchise"
-call1 <- paste0(base, endpoint)
 
-get_franchise <- GET(call1)
-get_franchise_text <- content(get_franchise, "text")
-
-get_franchise_text %>% gather_object %>% json_types %>% count(name, type)
+franch_func <- function(){
+  
+  #url ending
+  endpoint <- "/franchise"
+  #Create the url & read in the data 
+  call1 <- paste0(base, endpoint)
+  get_franchise <- GET(call1)
+  get_franchise_text <- content(get_franchise, "text")
+  
+  #use tidyjson to convert the data into a useable dataframe
+  franchise_prelim <- get_franchise_text %>% enter_object(data) %>%
+                      gather_array %>% spread_all
+  
+  franchise <- as_tibble(franchise_prelim) 
+  
+  franchise <- franchise %>% select(id, firstSeasonId, lastSeasonId, teamCommonName)
+  
+  return(franchise)
+}
 ```
 
-    ## # A tibble: 2 x 3
-    ##   name  type       n
-    ##   <chr> <fct>  <int>
-    ## 1 data  array      1
-    ## 2 total number     1
-
 ``` r
-franchise_prelim <- get_franchise_text %>%
-  enter_object(data) %>%
-  gather_array %>%
-  spread_all
-
-franchise <- as.tibble(franchise_prelim) 
-```
-
-    ## Warning: `as.tibble()` is deprecated as of tibble 2.0.0.
-    ## Please use `as_tibble()` instead.
-    ## The signature and semantics have changed, see `?as_tibble`.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
-
-``` r
- franchise %>% select(id, firstSeasonId, lastSeasonId, teamCommonName)
+franchise <- franch_func() 
+franchise
 ```
 
     ## # A tibble: 38 x 4
@@ -73,14 +61,3 @@ franchise <- as.tibble(franchise_prelim)
     ##  9     9      19251926     19301931 Quakers       
     ## 10    10      19261927           NA Rangers       
     ## # … with 28 more rows
-
-``` r
-#get_franchise_json <- fromJSON(get_franchise_text, flatten = TRUE, simplifyDataFrame = TRUE)
-#get_franchise_df <- as_tibble(get_franchise_json)
-
-#names(get_franchise_df)
-#get_franchise_df
-#franchise <- get_franchise_df %>% select("$id", "$firstSeasonId", "$lastSeasonId", "$teamCommonName")
-
-#print(franchise)
-```
