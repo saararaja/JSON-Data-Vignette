@@ -7,8 +7,8 @@ JSON Data - A Vignette by Saara Raja
     -   [rjson and rjsonio](#rjson-and-rjsonio)
     -   [jsonlite](#jsonlite)
     -   [tidyjson](#tidyjson)
--   [Example Analysis using JSON Data](#example-analysis-using-json-data)
-    -   [Connect to NHL Data](#connect-to-nhl-data)
+-   [Example Analytics Process using JSON Data](#example-analytics-process-using-json-data)
+    -   [Connecting to and parsing JSON data](#connecting-to-and-parsing-json-data)
 
 JSON Data Overview
 ------------------
@@ -58,10 +58,23 @@ Because of the ease of manipulating JSON data into data frames that can be used 
 
 Additional information for how to work with `tidyjson` can be found here: [tidyjson tutorial](https://rdrr.io/cran/tidyjson/f/vignettes/introduction-to-tidyjson.Rmd)
 
-Example Analysis using JSON Data
---------------------------------
+Example Analytics Process using JSON Data
+-----------------------------------------
 
-### Connect to NHL Data
+In this part of the vignette, I will demonstrate how to read in JSON data from the National Hockey League (NHL) API, convert that data into useable tidy data frames, and then perform exploratory data analysis.
+
+### Connecting to and parsing JSON data
+
+Here, I will show how to connect to the NHL API and extract the JSON data. Each function has the same basic structure:
+
+1.  Connect to the API
+2.  Grab the content of the API as text
+3.  Convert the JSON-structured text into a tidy dataframe
+4.  Keep the relevant data columns
+
+We will be creating 5 different data frames from JSON datasets: 1) franchise, 2) franch\_total, 3) franch\_season, 4) franch\_goalie, and 5) franch\_skater.
+
+-   Function to create the dataframe "franchise". This data set will contain the team names, first and last season IDs for each team in the NHL.
 
 ``` r
 base <- "https://records.nhl.com/site/api"
@@ -84,6 +97,8 @@ franch_func <- function(){
 }
 ```
 
+Calling the function and displaying the dataframe:
+
 ``` r
 franchise <- franch_func() 
 franchise
@@ -104,6 +119,8 @@ franchise
     ## 10    10      19261927           NA                3 Rangers       
     ## # … with 28 more rows, and 1 more variable: teamPlaceName <chr>
 
+-   Function to create the dataframe "franch\_total". This data set will contain the total stats for each franchise.
+
 ``` r
 franch_total_func <- function(){
   
@@ -122,6 +139,8 @@ franch_total_func <- function(){
   return(df)
 }
 ```
+
+Calling the function and displaying the dataframe:
 
 ``` r
 franch_total <- franch_total_func()
@@ -149,6 +168,8 @@ franch_total
     ## #   shootoutLosses <dbl>, shootoutWins <dbl>, shutouts <dbl>, teamId <dbl>,
     ## #   teamName <chr>, ties <dbl>, triCode <chr>, wins <dbl>
 
+-   Function to create the dataframe "franch\_season". This data set will contain season-specific records for one particular franchise. The user can specify the franchise ID for the franchise that they would like to dig into.
+
 ``` r
 franch_season_func <- function(number){
   
@@ -167,6 +188,8 @@ franch_season_func <- function(number){
   return(df)
 }
 ```
+
+Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_season <- franch_season_func(3)
@@ -197,6 +220,8 @@ franch_season
     ## #   roadWinlessStreakDates <chr>, winStreak <dbl>, winStreakDates <chr>,
     ## #   winlessStreak <lgl>, winlessStreakDates <lgl>
 
+-   Function to create the dataframe "franch\_goalie". This data set will contain goalie records for one particular franchise. The user can specify the franchise ID for the franchise that they would like to dig into.
+
 ``` r
 franch_goalie_func <- function(number){
   
@@ -215,6 +240,8 @@ franch_goalie_func <- function(number){
   return(df)
 }
 ```
+
+Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_goalie <- franch_goalie_func(3)
@@ -237,6 +264,8 @@ franch_goalie
     ## #   positionCode <chr>, rookieGamesPlayed <dbl>, rookieShutouts <dbl>,
     ## #   rookieWins <dbl>, seasons <dbl>, shutouts <dbl>, ties <dbl>, wins <dbl>
 
+-   Function to create the dataframe "franch\_skater". This data set will contain skater records for one particular franchise. The user can specify the franchise ID for the franchise that they would like to dig into.
+
 ``` r
 franch_skater_func <- function(number){
   
@@ -255,6 +284,8 @@ franch_skater_func <- function(number){
   return(df)
 }
 ```
+
+Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_skater <- franch_skater_func(3)
