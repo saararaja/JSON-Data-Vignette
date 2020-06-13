@@ -220,7 +220,7 @@ Now that the JSON API data is in dataframe form, I will demonstrate how data exp
 
 #### Do Teams usually win more on the road or lose more on the road vs at home?
 This code is used to calculate whether teams tend to win or lose more on the road, and whether they tend to win or lose more at home.  New variables are created comparing their win/loss rate both on the road and at home, and the frequency of these variables is then displayed in a two-way contingency table.
-```{r }
+```{r WinnLoss}
 #Create a variable based on win/loss rate on the road
 for(i in 1:length(franch_total$roadWins)) {
   if((franch_total$roadWins[i] > franch_total$roadLosses[i])){
@@ -249,7 +249,7 @@ for(i in 1:length(franch_total$homeWins)) {
 ```
 
 Frequency of Teams that Wins/Lose more at Home vs on the Road:
-```{r}
+```{r TwoWay}
 #Create a two-way table showing the rates of win/loss at home vs on the road
 kable(table(franch_total$homeStats, franch_total$RoadStats))
 ```
@@ -258,7 +258,7 @@ Based on the contingency table, the majority of teams win more at home and lose 
 
 #### What is the relationship between overall wins and losses per team?
 The number of wins and losses per team is visualized in a scatter plot. According to the scatter plot below, there is a positive relationship between wins and losses per team, meaning that teams that have more wins also have more losses.  After color coding by whether a franchise is active or not, it seems that the inactive teams have lower wins and losses in general compared to most of the active teams.
-```{r}
+```{r Scatter}
 
 franch_total$activeFranchise <- factor(franch_total$activeFranchise, levels = c(0, 1), labels = c("Not Active", "Active"))
 
@@ -267,10 +267,10 @@ g1 + geom_point() + labs(title="Wins vs Losses for NHL teams")
 
 ```
 
-#### What is the distribution of goals, assists, points and seasons per Skater position?
+#### What is the distribution of goals, assists, points and seasons per Skater position in franchise 3?
+A 5 number summary (Minimum, 1st Quartile, Median, Mean, 3rd Quartile, Maximum) is created for the number of goals, assists, points, and seasons for each of the skater positions.  Upon examining the results, on average, position R has the highest number of goals, assists, and points.
 
-
-```{r}
+```{r Position}
 library(tidyverse)
 
 #create function
@@ -279,11 +279,58 @@ num_tbl <- function(player_position) {
   return(kable(apply(player_stats, 2, summary), caption = paste("Summary of Player Stats for position:", player_position), digit = 1))
 }
 
+```
+
+Summary of Player Stats for position C
+```{r C}
 #call function
 num_tbl("C")
+```
+
+Summary of Player Stats for position R
+```{r R}
 num_tbl("R")
+```
+
+Summary of Player Stats for position L
+```{r L}
 num_tbl("L")
 num_tbl("D")
 ```
 
+Summary of Player Stats for position D
+```{r D}
+num_tbl("D")
+```
 
+#### What are the total number of points scored for skaters who scored over 100 goals or under 100 goals?
+This side-by-side bar chart shows the total number of points scored for skaters who scored over 100 goals and under 100 goals, and split into groups by their position.  This graph shows that in aggregate, players who scored more than 100 goals, scored more points. 
+```{r over100}
+franch_skater$over100 <- "Yes"
+franch_skater[franch_skater$goals < 100, "over100"] <- "No"
+
+g2 <- ggplot(franch_skater, aes(x=positionCode, y=points, fill=over100)) 
+g2 + geom_bar(stat='identity', position='dodge')
+```
+
+
+#### What is the distribution of losses for teams who have played over 1000 games vs teams who have played less?
+These boxplots show the distribution of losses for teams, split by whether they have played over 1000 games or not.  The results show that teams that have played more games, have also accrued more losses.
+```{r over1000}
+franch_total$over1000.games <- "Yes"
+franch_total[franch_total$gamesPlayed <= 1000, "over1000.games"] <- "No"
+
+g3 <- ggplot(franch_total, aes(x=over1000.games, y=losses))
+g3 + geom_boxplot()  + labs(title="Boxplot for losses") + geom_jitter(aes(color=over1000.games))
+
+```
+
+
+#### What is the relationship between penalty minutes and points?
+This scatter plot shows the relationship between minutes in penalty and points scored by each team.  The graph shows that in general, the more penalty minutes, the more points will be scored.  The inactive teams in general had lower penalty minutes and points.
+```{r minutes}
+
+g4 <- ggplot(franch_total, aes(x=penaltyMinutes, y=points, color = activeFranchise))
+g4 + geom_point() + labs(title="Points vs Penalty Minutes for NHL teams")
+
+```

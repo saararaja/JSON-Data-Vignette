@@ -380,7 +380,9 @@ g1 + geom_point() + labs(title="Wins vs Losses for NHL teams")
 
 ![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-#### What is the distribution of goals, assists, points and seasons per Skater position?
+#### What is the distribution of goals, assists, points and seasons per Skater position in franchise 3?
+
+A 5 number summary (Minimum, 1st Quartile, Median, Mean, 3rd Quartile, Maximum) is created for the number of goals, assists, points, and seasons for each of the skater positions. Upon examining the results, on average, position R has the highest number of goals, assists, and points.
 
 ``` r
 library(tidyverse)
@@ -390,7 +392,11 @@ num_tbl <- function(player_position) {
   player_stats <- franch_skater %>% filter(positionCode == player_position) %>% select(goals, assists, points, seasons)
   return(kable(apply(player_stats, 2, summary), caption = paste("Summary of Player Stats for position:", player_position), digit = 1))
 }
+```
 
+Summary of Player Stats for position C
+
+``` r
 #call function
 num_tbl("C")
 ```
@@ -404,6 +410,8 @@ num_tbl("C")
 | 3rd Qu. |   18.5|     20.0|    35.2|      2.2|
 | Max.    |  137.0|    100.0|   237.0|     13.0|
 
+Summary of Player Stats for position R
+
 ``` r
 num_tbl("R")
 ```
@@ -416,6 +424,8 @@ num_tbl("R")
 | Mean    |   21.3|     14.9|    36.2|      2.7|
 | 3rd Qu. |   21.0|     17.0|    36.0|      3.0|
 | Max.    |  102.0|     67.0|   169.0|     11.0|
+
+Summary of Player Stats for position L
 
 ``` r
 num_tbl("L")
@@ -442,3 +452,55 @@ num_tbl("D")
 | Mean    |   10.8|      8.9|    19.6|      2.5|
 | 3rd Qu. |    5.8|      5.0|    10.8|      3.0|
 | Max.    |  114.0|     75.0|   189.0|     12.0|
+
+Summary of Player Stats for position D
+
+``` r
+num_tbl("D")
+```
+
+|         |  goals|  assists|  points|  seasons|
+|---------|------:|--------:|-------:|--------:|
+| Min.    |    0.0|      0.0|     0.0|      1.0|
+| 1st Qu. |    0.0|      1.0|     1.0|      1.0|
+| Median  |    2.0|      2.0|     6.0|      1.0|
+| Mean    |   10.8|      8.9|    19.6|      2.5|
+| 3rd Qu. |    5.8|      5.0|    10.8|      3.0|
+| Max.    |  114.0|     75.0|   189.0|     12.0|
+
+#### What are the total number of points scored for skaters who scored over 100 goals or under 100 goals?
+
+This side-by-side bar chart shows the total number of points scored for skaters who scored over 100 goals and under 100 goals, and split into groups by their position. This graph shows that in aggregate, players who scored more than 100 goals, scored more points.
+
+``` r
+franch_skater$over100 <- "Yes"
+franch_skater[franch_skater$goals < 100, "over100"] <- "No"
+
+g2 <- ggplot(franch_skater, aes(x=positionCode, y=points, fill=over100)) 
+g2 + geom_bar(stat='identity', position='dodge')
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+#### What is the distribution of losses for teams who have played over 1000 games vs teams who have played less?
+
+These boxplots show the distribution of losses for teams, split by whether they have played over 1000 games or not. The results show that teams that have played more games, have also accrued more losses.
+
+``` r
+franch_total$over1000.games <- "Yes"
+franch_total[franch_total$gamesPlayed <= 1000, "over1000.games"] <- "No"
+
+g3 <- ggplot(franch_total, aes(x=over1000.games, y=losses))
+g3 + geom_boxplot()  + labs(title="Boxplot for losses") + geom_jitter(aes(color=over1000.games))
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+#### What is the relationship between penalty minutes and points?
+
+``` r
+g4 <- ggplot(franch_total, aes(x=penaltyMinutes, y=points, color = activeFranchise))
+g4 + geom_point() + labs(title="Points vs Penalty Minutes for NHL teams")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-12-1.png)
