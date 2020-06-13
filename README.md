@@ -9,6 +9,7 @@ JSON Data - A Vignette by Saara Raja
     -   [tidyjson](#tidyjson)
 -   [Example Analytics Process using JSON Data](#example-analytics-process-using-json-data)
     -   [Connecting to and parsing JSON data](#connecting-to-and-parsing-json-data)
+    -   [Exploratory Data Analysis](#exploratory-data-analysis)
 
 JSON Data Overview
 ------------------
@@ -97,7 +98,7 @@ franch_func <- function(){
 }
 ```
 
-Calling the function and displaying the dataframe:
+-   Calling the function and displaying the dataframe:
 
 ``` r
 franchise <- franch_func() 
@@ -140,7 +141,7 @@ franch_total_func <- function(){
 }
 ```
 
-Calling the function and displaying the dataframe:
+-   Calling the function and displaying the dataframe:
 
 ``` r
 franch_total <- franch_total_func()
@@ -189,7 +190,7 @@ franch_season_func <- function(number){
 }
 ```
 
-Calling the function and displaying the dataframe for Franchise 3:
+-   Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_season <- franch_season_func(3)
@@ -241,7 +242,7 @@ franch_goalie_func <- function(number){
 }
 ```
 
-Calling the function and displaying the dataframe for Franchise 3:
+-   Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_goalie <- franch_goalie_func(3)
@@ -285,7 +286,7 @@ franch_skater_func <- function(number){
 }
 ```
 
-Calling the function and displaying the dataframe for Franchise 3:
+-   Calling the function and displaying the dataframe for Franchise 3:
 
 ``` r
 franch_skater <- franch_skater_func(3)
@@ -314,3 +315,130 @@ franch_skater
     ## #   mostPointsOneGame <dbl>, mostPointsOneSeason <dbl>,
     ## #   mostPointsSeasonIds <chr>, penaltyMinutes <dbl>, playerId <dbl>,
     ## #   points <dbl>, positionCode <chr>, rookiePoints <dbl>, seasons <dbl>
+
+### Exploratory Data Analysis
+
+Now that the JSON API data is in dataframe form, I will demonstrate how data exploration can be performed.
+
+#### Do Teams usually win more on the road or lose more on the road vs at home?
+
+This code is used to calculate whether teams tend to win or lose more on the road, and whether they tend to win or lose more at home. New variables are created comparing their win/loss rate both on the road and at home, and the frequency of these variables is then displayed in a two-way contingency table.
+
+``` r
+#Create a variable based on win/loss rate on the road
+for(i in 1:length(franch_total$roadWins)) {
+  if((franch_total$roadWins[i] > franch_total$roadLosses[i])){
+            franch_total$RoadStats[i] <- "Win More on Road"
+        }
+  else if((franch_total$roadWins[i] < franch_total$roadLosses[i])){
+            franch_total$RoadStats[i] <- "Lose More on Road"
+        }
+  else{
+        franch_total$RoadStats[i] <- "Equal"
+        }
+}
+
+#Create a variable based on win/loss rate at home
+for(i in 1:length(franch_total$homeWins)) {
+  if((franch_total$homeWins[i] > franch_total$homeLosses[i])){
+            franch_total$homeStats[i] <- "Win More at Home"
+        }
+  else if((franch_total$homeWins[i] < franch_total$homeLosses[i])){
+            franch_total$homeStats[i] <- "Lose More at Home"
+        }
+  else{
+        franch_total$homeStats[i] <- "Equal"
+        }
+}
+```
+
+Frequency of Teams that Wins/Lose more at Home vs on the Road:
+
+``` r
+#Create a two-way table showing the rates of win/loss at home vs on the road
+kable(table(franch_total$homeStats, franch_total$RoadStats))
+```
+
+|                   |  Equal|  Lose More on Road|  Win More on Road|
+|-------------------|------:|------------------:|-----------------:|
+| Equal             |      0|                  2|                 0|
+| Lose More at Home |      1|                 27|                 2|
+| Win More at Home  |      1|                 61|                10|
+
+Based on the contingency table, the majority of teams win more at home and lose more on the road.
+
+#### What is the relationship between overall wins and losses per team?
+
+The number of wins and losses per team is visualized in a scatter plot. According to the scatter plot below, there is a positive relationship between wins and losses per team, meaning that teams that have more wins also have more losses. After color coding by whether a franchise is active or not, it seems that the inactive teams have lower wins and losses in general compared to most of the active teams.
+
+``` r
+franch_total$activeFranchise <- factor(franch_total$activeFranchise, levels = c(0, 1), labels = c("Not Active", "Active"))
+
+g1 <- ggplot(franch_total, aes(x=wins, y=losses, color = activeFranchise))
+g1 + geom_point() + labs(title="Wins vs Losses for NHL teams")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+#### What is the distribution of goals, assists, points and seasons per Skater position?
+
+``` r
+library(tidyverse)
+
+#create function
+num_tbl <- function(player_position) {
+  player_stats <- franch_skater %>% filter(positionCode == player_position) %>% select(goals, assists, points, seasons)
+  return(kable(apply(player_stats, 2, summary), caption = paste("Summary of Player Stats for position:", player_position), digit = 1))
+}
+
+#call function
+num_tbl("C")
+```
+
+|         |  goals|  assists|  points|  seasons|
+|---------|------:|--------:|-------:|--------:|
+| Min.    |    0.0|      0.0|     0.0|      1.0|
+| 1st Qu. |    1.8|      1.8|     3.8|      1.0|
+| Median  |    6.5|      7.0|    11.5|      2.0|
+| Mean    |   18.4|     16.1|    34.4|      2.6|
+| 3rd Qu. |   18.5|     20.0|    35.2|      2.2|
+| Max.    |  137.0|    100.0|   237.0|     13.0|
+
+``` r
+num_tbl("R")
+```
+
+|         |  goals|  assists|  points|  seasons|
+|---------|------:|--------:|-------:|--------:|
+| Min.    |    0.0|      0.0|     0.0|      1.0|
+| 1st Qu. |    2.0|      1.5|     3.5|      1.0|
+| Median  |    7.0|      7.0|    13.0|      2.0|
+| Mean    |   21.3|     14.9|    36.2|      2.7|
+| 3rd Qu. |   21.0|     17.0|    36.0|      3.0|
+| Max.    |  102.0|     67.0|   169.0|     11.0|
+
+``` r
+num_tbl("L")
+```
+
+|         |  goals|  assists|  points|  seasons|
+|---------|------:|--------:|-------:|--------:|
+| Min.    |    0.0|      0.0|     0.0|      1.0|
+| 1st Qu. |    0.0|      0.0|     0.0|      1.0|
+| Median  |    1.0|      2.0|     3.0|      1.0|
+| Mean    |   20.9|     12.8|    33.6|      2.5|
+| 3rd Qu. |   13.0|     17.0|    30.0|      3.0|
+| Max.    |  246.0|     87.0|   333.0|     11.0|
+
+``` r
+num_tbl("D")
+```
+
+|         |  goals|  assists|  points|  seasons|
+|---------|------:|--------:|-------:|--------:|
+| Min.    |    0.0|      0.0|     0.0|      1.0|
+| 1st Qu. |    0.0|      1.0|     1.0|      1.0|
+| Median  |    2.0|      2.0|     6.0|      1.0|
+| Mean    |   10.8|      8.9|    19.6|      2.5|
+| 3rd Qu. |    5.8|      5.0|    10.8|      3.0|
+| Max.    |  114.0|     75.0|   189.0|     12.0|
